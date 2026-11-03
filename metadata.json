@@ -1,0 +1,6 @@
+{
+  "name": "Kaigi (会議) — Offline Windows Meeting Manager by SGB Dev Apps",
+  "description": "Kaigi runs recurring meetings from agenda to issued minutes, and keeps track of every decision, action and open issue — fully offline, on your own PC.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

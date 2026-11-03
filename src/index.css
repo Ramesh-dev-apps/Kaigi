@@ -1,0 +1,203 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-display: 'Space Grotesk', 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+    --font-sans: 'Public Sans', 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Noto Sans JP', monospace;
+
+    /* Brand tokens */
+    --bg-paper: #F6F4F0;
+    --bg-paper-elevated: #FDFCFA;
+    --bg-paper-muted: #ECE8E0;
+    --ink: #15171C;
+    --ink-elevated: #1D2028;
+    --ink-card: #1A1D24;
+    --coral: #E8456B;
+    --coral-deep: #C42F57;
+
+    /* Mouse spotlight coordinates */
+    --mouse-x: 50vw;
+    --mouse-y: 35vh;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+
+  code, kbd, pre, .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Performant GPU-Friendly Mouse Cursor Flashlight / Spotlight Effect */
+.flashlight-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  opacity: 0.85;
+  transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: background, opacity;
+  background: radial-gradient(
+    650px circle at var(--mouse-x) var(--mouse-y),
+    rgba(232, 69, 107, 0.075),
+    rgba(255, 248, 235, 0.14) 32%,
+    transparent 70%
+  );
+}
+
+html[data-card-hovered="true"] .flashlight-overlay {
+  opacity: 1;
+  background: radial-gradient(
+    560px circle at var(--mouse-x) var(--mouse-y),
+    rgba(232, 69, 107, 0.115),
+    rgba(255, 248, 235, 0.2) 34%,
+    transparent 68%
+  );
+}
+
+.dark .flashlight-overlay {
+  background: radial-gradient(
+    700px circle at var(--mouse-x) var(--mouse-y),
+    rgba(232, 69, 107, 0.12),
+    rgba(196, 47, 87, 0.045) 38%,
+    transparent 72%
+  );
+}
+
+html.dark[data-card-hovered="true"] .flashlight-overlay {
+  opacity: 1;
+  background: radial-gradient(
+    600px circle at var(--mouse-x) var(--mouse-y),
+    rgba(232, 69, 107, 0.175),
+    rgba(196, 47, 87, 0.075) 38%,
+    transparent 70%
+  );
+}
+
+/* Interactive card spotlight-follow surface & perimeter border illumination */
+.spotlight-surface {
+  position: relative;
+  isolation: isolate;
+  transition:
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Inner surface spotlight glow that intensifies on mouse enter */
+.spotlight-surface::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: radial-gradient(
+    460px circle at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%),
+    rgba(232, 69, 107, 0.115),
+    rgba(255, 246, 238, 0.18) 38%,
+    transparent 72%
+  );
+}
+
+.dark .spotlight-surface::before {
+  background: radial-gradient(
+    480px circle at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%),
+    rgba(232, 69, 107, 0.185),
+    rgba(196, 47, 87, 0.07) 42%,
+    transparent 74%
+  );
+}
+
+/* Crisp radial perimeter border highlight following the cursor */
+.spotlight-surface::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1.25px;
+  opacity: 0;
+  transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: radial-gradient(
+    320px circle at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%),
+    rgba(232, 69, 107, 0.55),
+    rgba(196, 47, 87, 0.18) 45%,
+    transparent 75%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.spotlight-surface:hover::before,
+.spotlight-surface[data-spotlight-active="true"]::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.spotlight-surface:hover::after,
+.spotlight-surface[data-spotlight-active="true"]::after {
+  opacity: 1;
+}
+
+.spotlight-surface > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Architectural spine grid backdrop inspired by web_style.jpg */
+.architectural-grid {
+  background-size: 64px 64px;
+  background-image: 
+    linear-gradient(to right, rgba(21, 23, 28, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(21, 23, 28, 0.04) 1px, transparent 1px);
+}
+
+.dark .architectural-grid {
+  background-image: 
+    linear-gradient(to right, rgba(246, 244, 240, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(246, 244, 240, 0.04) 1px, transparent 1px);
+}
+
+/* Subtle custom scrollbar for horizontal module chips on mobile */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .flashlight-overlay {
+    display: none !important;
+  }
+}
